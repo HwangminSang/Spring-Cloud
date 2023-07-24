@@ -1,0 +1,9 @@
+spring:
+#  profiles:
+#    active: dev
+  cloud:
+    ## 읽어온 config 서버 주소
+    config:
+#      uri: http://127.0.0.1:8888  # 로컬
+      uri: http://config-service:8888  # 도커 실행시 같은 네트워크망으로
+      name: user-service  # 서비스 이름 입력시 applicaiton.yml을 읽어온다.   읽어올 파일명 지정

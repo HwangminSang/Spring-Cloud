@@ -1,0 +1,22 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+  rabbitmq:  # 스프링 클라우드 버스 이용
+    host: rabbitmq  # rabbitmq와 현재 같은 컨테이너에서 실행 된것이 아니기떄문에 localhost는 찾지 못한다. 그래서 ip로 지정해서 가도 되겠지만 같은 네트워크로 묶일것이기 때문에 컨테이너 이름으로 컨테이너 실행시 연결 해주자
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/HwangminSang/cloud-config.git  # git
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh
+#          uri: file:///C:\\work\\git-logal-repo  # 로컬 파일에서

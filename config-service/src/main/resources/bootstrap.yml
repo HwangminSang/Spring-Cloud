@@ -1,0 +1,8 @@
+encrypt:
+  key-store:
+    #    location:  file:///C:\\work\\keystore\\apiEncryptionKey.jks  # 공개키  로컬에서
+    location: file:/apiEncryptionKey.jks #도커 컨테이너 네부에서 .
+    password: 351812
+    alias: apiEncryptionkey
+#    location: https://github.com/HwangminSang/key-store.git
+#  key: hwangminsang # 암호화시 사용하는 key   ( 대칭키  , 비대칭키)

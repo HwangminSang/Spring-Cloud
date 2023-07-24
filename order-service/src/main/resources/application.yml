@@ -1,0 +1,45 @@
+
+server:
+  port: 0
+spring:
+  application:
+    name: order-service
+#  zipkin: # 서비스간 통신 추적
+#    base-url: http://127.0.0.1:9411
+#    enabled: true
+  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/msa
+#    username: root
+#    password: 1234
+#
+    url: jdbc:mariadb://mariadb:3306/order
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url :
+#      defaultZone : http://localhost:8761/eureka #로컬
+      defaultZone: http://discovery-service:8761/eureka  #도커
+
+    instance:
+      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+## 스프링 acutorat 사용시
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh , httptrace , health , beans ,busrefresh ,  info, metrics, prometheus
+
+

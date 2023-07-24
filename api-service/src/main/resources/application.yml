@@ -1,0 +1,105 @@
+server:
+  port: 9000
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url :
+#      defaultZone : http://localhost:8761/eureka  #로컬
+      defaultZone : http://discovery-service:8761/eureka/  # 도커 컨테이너 내부
+spring:
+  application:
+    name: apigateway-service
+  rabbitmq:
+    #host: 127.0.0.1 # 로컬에서만 가능
+    host: rabbitmq # 도커 컨너에티너 이름 ( 같은네트워크 대역으로 묶어서 컨테이너 이름으로 통신가능
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    gateway:
+      default-filters:
+        - name: GolobalFilter
+          args:
+            baseMessage : "??? ???? api-gateway ??? ?????"
+            preLogger : true
+            postLogger : true
+      routes:
+
+        - id: catalog-service
+          uri: lb://CATALOG-SERVICE
+          predicates:
+            - Path=/catalog-service/**
+
+
+        ## 설정 변경
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter  # 회원가입 및 로그인시 인증여부 확인 필요 x  그 외 요청시 인증 받은 사용자 대상이기때문에 필터 필요
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+
+
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**
+
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/actuator/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/order-service/(?<segment>.*), /$\{segment}
+
+## 복호화시 사용
+#token:
+#  secret: user_token
+
+logging:
+  level:
+    com.example.apiservice: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh , httptrace,health , beans, busrefresh ,  info, metrics, prometheus

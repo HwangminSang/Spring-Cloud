@@ -1,0 +1,19 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: eurekaServer
+
+# config 서버 사용시
+  cloud:
+    config:
+#      uri: http://127.0.0.1:8888  #로컬에서
+      uri: http://config-service:8888 #도커에서  같은네트워크라서 컨테이너 이름으로 통신가능
+      name: ecommerce
+
+#서버이기때문에 false
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+

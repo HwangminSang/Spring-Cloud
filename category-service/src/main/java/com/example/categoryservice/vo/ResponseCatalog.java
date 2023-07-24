@@ -1,0 +1,22 @@
+package com.example.categoryservice.vo;
+
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+
+import java.util.Date;
+
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL) // null값은 반환 x
+public class ResponseCatalog {
+
+    private String productId;
+
+    private String productName;
+
+    private Integer stock;
+
+    private Integer unitPrice;
+
+    private Date createAt;
+}

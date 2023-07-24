@@ -1,0 +1,9 @@
+spring:
+#  profiles:
+#    active: dev
+  cloud:
+    ## 읽어온 config 서버 주소
+    config:
+#      uri: http://127.0.0.1:8888  # 로컬
+      uri: http://config-service:8888  #도커내부 같은 네트워크망
+      name: ecommerce
